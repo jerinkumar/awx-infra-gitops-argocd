@@ -1,0 +1,17 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: prod-pool
+  namespace: metallb-system
+spec:
+  addresses:
+    - 192.168.65.50-192.168.65.80 #Change this based on your environment
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: prod-l2
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+    - prod-pool
