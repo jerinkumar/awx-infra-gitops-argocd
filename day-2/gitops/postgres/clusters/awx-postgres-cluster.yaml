@@ -1,0 +1,67 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: awx-postgres
+  namespace: postgres-awx
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"  # Install after secrets
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.2
+
+  storage:
+    storageClass: local-path
+    size: 5Gi
+
+  walStorage:
+    storageClass: local-path
+    size: 5Gi
+
+  postgresql:
+    parameters:
+      max_connections: "200"
+      shared_buffers: "256MB"
+      effective_cache_size: "1GB"
+      maintenance_work_mem: "64MB"
+      checkpoint_completion_target: "0.9"
+      wal_buffers: "16MB"
+      default_statistics_target: "100"
+      random_page_cost: "1.1"
+      effective_io_concurrency: "200"
+      work_mem: "2621kB"
+      min_wal_size: "1GB"
+      max_wal_size: "4GB"
+
+  bootstrap:
+    initdb:
+      database: awx
+      owner: awx
+      secret:
+        name: awx-postgres-credentials
+
+  backup:
+    barmanObjectStore:
+      destinationPath: s3://postgres-backup/awx-backups/
+      endpointURL: http://192.168.65.8:9000
+      s3Credentials:
+        accessKeyId:
+          name: backup-credentials
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: backup-credentials
+          key: ACCESS_SECRET_KEY
+      wal:
+        compression: gzip
+        maxParallel: 2
+    retentionPolicy: "30d"
+
+  monitoring:
+    enablePodMonitor: true
+
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "2"
