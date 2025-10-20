@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  # Install the AWX Operator from GitHub
+  - github.com/ansible/awx-operator/config/default?ref=2.19.1  # Check for latest version
+
+# Set the namespace for all resources
+namespace: awx
+
+# Add this image to pull the correct operator version
+images:
+  - name: quay.io/ansible/awx-operator
+    newTag: 2.19.1  # Match with the ref version above
