@@ -10,7 +10,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: jerinkumar/awx-infra-gitops-argocd
+    repoURL: https://github.com/jerinkumar/awx-infra-gitops-argocd
     targetRevision: main
     path: day-1/postgres
   destination:
