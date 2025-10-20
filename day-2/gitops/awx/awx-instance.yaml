@@ -39,5 +39,6 @@ spec:
   
   # Storage
   projects_persistence: true
+  projects_storage_access_mode: ReadWriteOnce
   projects_storage_class: local-path
   projects_storage_size: 4Gi
