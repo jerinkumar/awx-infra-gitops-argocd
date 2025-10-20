@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/jerinkumar/awx-infra-gitops-argocd
     targetRevision: main
-    path: apps
+    path: day-2/gitops/apps
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
