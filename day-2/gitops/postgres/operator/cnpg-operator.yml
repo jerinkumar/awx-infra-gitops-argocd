@@ -1,0 +1,8 @@
+# This file references the official CloudNativePG operator manifest
+# ArgoCD will fetch and apply it
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cnpg-system
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
