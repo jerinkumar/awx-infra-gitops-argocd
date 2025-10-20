@@ -4,6 +4,9 @@ kind: Kustomization
 resources:
   # Install the AWX Operator from GitHub
   - github.com/ansible/awx-operator/config/default?ref=2.19.1  # Check for latest version
+  - namespace.yaml
+  - secrets.yaml
+  - awx-instance.yaml
 
 # Set the namespace for all resources
 namespace: awx
