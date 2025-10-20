@@ -1,0 +1,43 @@
+apiVersion: awx.ansible.com/v1beta1
+kind: AWX
+metadata:
+  name: awx
+  namespace: awx
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"  # Deploy after operator
+spec:
+  service_type: LoadBalancer  # or NodePort or ClusterIP
+  
+  # PostgreSQL Configuration - connects to your existing postgres
+  postgres_configuration_secret: awx-postgres-configuration
+  
+  # Admin account
+  admin_user: admin
+  admin_password_secret: awx-admin-password
+  
+  # Ingress configuration (optional)
+  # ingress_type: ingress
+  # ingress_hosts:
+  #   - hostname: awx.example.com
+  
+  # Resource limits
+  web_resource_requirements:
+    requests:
+      memory: "2Gi"
+      cpu: "1000m"
+    limits:
+      memory: "4Gi"
+      cpu: "2000m"
+  
+  task_resource_requirements:
+    requests:
+      memory: "2Gi"
+      cpu: "1000m"
+    limits:
+      memory: "4Gi"
+      cpu: "2000m"
+  
+  # Storage
+  projects_persistence: true
+  projects_storage_class: local-path
+  projects_storage_size: 8Gi
