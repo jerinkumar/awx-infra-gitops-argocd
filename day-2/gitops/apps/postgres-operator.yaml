@@ -12,7 +12,7 @@ spec:
   source:
     repoURL: jerinkumar/awx-infra-gitops-argocd
     targetRevision: main
-    path: postgres/operator
+    path: day-1/postgres
   destination:
     server: https://kubernetes.default.svc
     namespace: cnpg-system
