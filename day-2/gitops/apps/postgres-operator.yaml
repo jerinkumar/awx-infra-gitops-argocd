@@ -10,7 +10,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/YOUR-ORG/your-gitops-repo  # Your repo URL
+    repoURL: jerinkumar/awx-infra-gitops-argocd
     targetRevision: main
     path: postgres/operator
   destination:
