@@ -21,23 +21,23 @@ spec:
   #   - hostname: awx.example.com
   
   # Resource limits
-  web_resource_requirements:
-    requests:
-      memory: "2Gi"
-      cpu: "1000m"
-    limits:
-      memory: "4Gi"
-      cpu: "2000m"
+  #web_resource_requirements:
+    #requests:
+      #memory: "2Gi"
+      #cpu: "1000m"
+    #limits:
+      #memory: "4Gi"
+      #cpu: "2000m"
   
-  task_resource_requirements:
-    requests:
-      memory: "2Gi"
-      cpu: "1000m"
-    limits:
-      memory: "4Gi"
-      cpu: "2000m"
+  #task_resource_requirements:
+    #requests:
+      #memory: "2Gi"
+      #cpu: "1000m"
+    #limits:
+      #memory: "4Gi"
+      #cpu: "2000m"
   
   # Storage
   projects_persistence: true
   projects_storage_class: local-path
-  projects_storage_size: 8Gi
+  projects_storage_size: 4Gi
