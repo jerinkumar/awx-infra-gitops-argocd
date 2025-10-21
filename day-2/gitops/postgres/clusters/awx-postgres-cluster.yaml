@@ -1,7 +1,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: awx-postgres
+  name: awx-postgres-restore
   namespace: postgres-awx
   annotations:
     argocd.argoproj.io/sync-wave: "2"  # Install after secrets
@@ -17,43 +17,31 @@ spec:
     storageClass: local-path
     size: 5Gi
 
-  postgresql:
-    parameters:
-      max_connections: "200"
-      shared_buffers: "256MB"
-      effective_cache_size: "1GB"
-      maintenance_work_mem: "64MB"
-      checkpoint_completion_target: "0.9"
-      wal_buffers: "16MB"
-      default_statistics_target: "100"
-      random_page_cost: "1.1"
-      effective_io_concurrency: "200"
-      work_mem: "2621kB"
-      min_wal_size: "1GB"
-      max_wal_size: "4GB"
-
+  # Bootstrap via recovery from an existing cluster’s backup
   bootstrap:
-    initdb:
-      database: awx
-      owner: awx
-      secret:
-        name: awx-postgres-credentials
+    recovery:
+      source: awx-postgres       # Must match the externalClusters[].name
+      # Uncomment for PITR:
+      # recoveryTarget:
+      #   targetTime: "2025-10-08T15:00:00Z"
 
-  backup:
-    barmanObjectStore:
-      destinationPath: s3://postgres-backup/awx-backups/
-      endpointURL: http://192.168.65.8:9000
-      s3Credentials:
-        accessKeyId:
-          name: backup-credentials
-          key: ACCESS_KEY_ID
-        secretAccessKey:
-          name: backup-credentials
-          key: ACCESS_SECRET_KEY
-      wal:
-        compression: gzip
-        maxParallel: 2
-    retentionPolicy: "30d"
+  # External cluster definition – points to backup storage (MinIO/S3)
+  externalClusters:
+    - name: awx-postgres
+      barmanObjectStore:
+        destinationPath: s3://postgres-backup/awx-backups/    # match original
+        endpointURL: http://192.168.65.8:9000                # replace with MinIO/S3 endpoint
+        s3Credentials:
+          accessKeyId:
+            name: backup-credentials
+            key: ACCESS_KEY_ID
+          secretAccessKey:
+            name: backup-credentials
+            key: ACCESS_SECRET_KEY
+        wal:
+          compression: gzip
+          maxParallel: 2
+
 
   monitoring:
     enablePodMonitor: true
